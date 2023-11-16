@@ -1,1 +1,1 @@
-export function startTurboAnimate(): void;
+export function start(): void;

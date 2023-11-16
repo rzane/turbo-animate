@@ -20,7 +20,7 @@ async function animate(className) {
   await Promise.all(promises);
 }
 
-export function startTurboAnimate() {
+export function start() {
   let action;
   let leave;
 
@@ -37,7 +37,7 @@ export function startTurboAnimate() {
 
   const onLoad = async () => {
     await animate(`turbo-${action}-enter`);
-    startTurboAnimate();
+    start();
   };
 
   addEventListener("turbo:visit", onVisit, { once: true });
