@@ -22,13 +22,13 @@ function onVisit(visitEvent) {
 
   const onLoad = async () => {
     await animate(`turbo-${action}-enter`);
-    animateTurbo();
+    startTurboAnimate();
   };
 
   addEventListener("turbo:before-render", onBeforeRender, { once: true });
   addEventListener("turbo:load", onLoad, { once: true });
 }
 
-export function animateTurbo() {
+export function startTurboAnimate() {
   addEventListener("turbo:visit", onVisit, { once: true });
 }

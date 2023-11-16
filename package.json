@@ -1,12 +1,17 @@
 {
   "name": "@rzane/turbo-animate",
   "version": "0.1.0",
-  "main": "turbo-animate.js",
-  "type": "module",
   "author": "Ray Zane",
   "license": "MIT",
   "description": "Animate Turbo Drive's page transitions",
   "homepage": "https://github.com/rzane/turbo-animate#readme",
+  "type": "module",
+	"main": "./turbo-animate.js",
+	"types": "./turbo-animate.d.ts",
+	"exports": {
+		"types": "./turbo-animate.d.ts",
+		"default": "./turbo-animate.js"
+	},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rzane/turbo-animate.git"
@@ -14,11 +19,18 @@
   "bugs": {
     "url": "https://github.com/rzane/turbo-animate/issues"
   },
+  "keywords": [
+    "turbo",
+    "hotwire",
+    "hotwired",
+    "animate",
+    "transition"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon -e js,html example/server.js"
   },
-  "dependencies": {
+  "devDependencies": {
     "express": "^4.18.2",
     "nodemon": "^3.0.1",
     "nunjucks": "^3.2.4"
