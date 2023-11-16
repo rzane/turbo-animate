@@ -20,9 +20,14 @@ async function animate(className) {
   await Promise.all(promises);
 }
 
-function onVisit(visitEvent) {
-  const action = visitEvent.detail.action;
-  const leave = animate(`turbo-${action}-leave`);
+export function startTurboAnimate() {
+  let action;
+  let leave;
+
+  const onVisit = (event) => {
+    action = event.detail.action;
+    leave = animate(`turbo-${action}-leave`);
+  };
 
   const onBeforeRender = async (event) => {
     event.preventDefault();
@@ -35,10 +40,7 @@ function onVisit(visitEvent) {
     startTurboAnimate();
   };
 
+  addEventListener("turbo:visit", onVisit, { once: true });
   addEventListener("turbo:before-render", onBeforeRender, { once: true });
   addEventListener("turbo:load", onLoad, { once: true });
-}
-
-export function startTurboAnimate() {
-  addEventListener("turbo:visit", onVisit, { once: true });
 }
