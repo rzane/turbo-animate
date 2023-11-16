@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('has title', async ({ page }) => {
-  await page.goto('/');
-  await expect(page).toHaveTitle("Turbo Animate Demo");
+test("transitions from / to /about", async ({ page }) => {
+  await page.goto("/");
+  await page.getByText("About").click();
+  await expect(page.getByTestId("title")).toHaveText("About");
 });
