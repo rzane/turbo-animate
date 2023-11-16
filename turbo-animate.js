@@ -1,7 +1,17 @@
+const classNames = [
+  'turbo-advance-enter',
+  'turbo-advance-leave',
+  'turbo-replace-leave',
+  'turbo-replace-enter',
+  'turbo-restore-leave',
+  'turbo-restore-enter',
+];
+
 async function animate(className) {
   const elements = Array.from(document.querySelectorAll("[data-turbo-animate]"));
 
   const promises = elements.map(async element => {
+    element.classList.remove(...classNames);
     element.classList.add(className);
     await Promise.all(element.getAnimations().map(animation => animation.finished));
     element.classList.remove(className);
