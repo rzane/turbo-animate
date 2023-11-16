@@ -37,12 +37,13 @@ export function start() {
 
   const onLoad = async () => {
     await animate(`turbo-${action}-enter`);
-    start();
+    addEventListener("turbo:visit", onVisit, { once: true });
+    addEventListener("turbo:before-render", onBeforeRender, { once: true });
   };
 
-  addEventListener("turbo:click", onInitiate, { once: true });
-  addEventListener("turbo:submit-start", onInitiate, { once: true });
+  addEventListener("turbo:click", onInitiate);
+  addEventListener("turbo:submit-start", onInitiate);
   addEventListener("turbo:visit", onVisit, { once: true });
   addEventListener("turbo:before-render", onBeforeRender, { once: true });
-  addEventListener("turbo:load", onLoad, { once: true });
+  addEventListener("turbo:load", onLoad);
 }
