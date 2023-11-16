@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+    <title>Turbo Animate Demo</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
+
+    <script type="module">
+      import "https://cdn.skypack.dev/@hotwired/turbo@^7.3.0";
+      import { animateTurbo } from "/turbo-animate.js";
+
+      animateTurbo();
+    </script>
+
+    <style>
+      .turbo-advance-leave {
+        animation: 200ms slide-out ease-in;
+        --slide-out-to-x: -100%;
+      }
+
+      .turbo-advance-enter {
+        animation: 200ms slide-in ease-out;
+        --slide-in-from-x: 100%;
+      }
+
+      .turbo-replace-leave,
+      .turbo-restore-leave {
+        animation: 200ms slide-out ease-in;
+        --slide-out-to-x: 100%;
+      }
+
+      .turbo-replace-enter,
+      .turbo-restore-enter {
+        animation: 200ms slide-in ease-out;
+        --slide-in-from-x: -100%;
+      }
+
+      @keyframes slide-in {
+        from {
+          opacity: 0;
+          transform: translate3d(var(--slide-in-from-x), 0, 0);
+        }
+      }
+
+      @keyframes slide-out {
+        to {
+          opacity: 0;
+          transform: translate3d(var(--slide-out-to-x), 0, 0);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    {% block body %}{% endblock %}
+  </body>
+</html>
