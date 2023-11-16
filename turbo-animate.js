@@ -17,8 +17,8 @@ async function animate(className) {
 }
 
 export function start() {
-  let action;
-  let leave;
+  let action = undefined;
+  let leave = undefined;
 
   const onInitiate = (event) => {
     action = event.target.dataset.turboAnimateWith;
@@ -37,6 +37,8 @@ export function start() {
 
   const onLoad = async () => {
     await animate(`turbo-${action}-enter`);
+    action = undefined;
+    leave = undefined;
     addEventListener("turbo:visit", onVisit, { once: true });
     addEventListener("turbo:before-render", onBeforeRender, { once: true });
   };
