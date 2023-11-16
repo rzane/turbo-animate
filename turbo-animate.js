@@ -1,19 +1,15 @@
-const classNames = [
-  'turbo-advance-enter',
-  'turbo-advance-leave',
-  'turbo-replace-leave',
-  'turbo-replace-enter',
-  'turbo-restore-leave',
-  'turbo-restore-enter',
-];
+const isAnimateClassName = className => /^turbo-.+-enter|leave$/.test(className);
 
 async function animate(className) {
   const elements = Array.from(document.querySelectorAll("[data-turbo-animate]"));
 
   const promises = elements.map(async element => {
+    const classNames = Array.from(element.classList).filter(isAnimateClassName);
     element.classList.remove(...classNames);
+
     element.classList.add(className);
     await Promise.all(element.getAnimations().map(animation => animation.finished));
+
     element.classList.remove(className);
   });
 
@@ -24,8 +20,12 @@ export function start() {
   let action;
   let leave;
 
+  const onInitiate = (event) => {
+    action = event.target.dataset.turboAnimateWith;
+  };
+
   const onVisit = (event) => {
-    action = event.detail.action;
+    if (!action) action = event.detail.action;
     leave = animate(`turbo-${action}-leave`);
   };
 
@@ -40,6 +40,8 @@ export function start() {
     start();
   };
 
+  addEventListener("turbo:click", onInitiate, { once: true });
+  addEventListener("turbo:submit-start", onInitiate, { once: true });
   addEventListener("turbo:visit", onVisit, { once: true });
   addEventListener("turbo:before-render", onBeforeRender, { once: true });
   addEventListener("turbo:load", onLoad, { once: true });

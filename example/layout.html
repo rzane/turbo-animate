@@ -36,17 +36,27 @@
         --slide-in-from-x: -100%;
       }
 
+      .turbo-custom-leave {
+        animation: 200ms slide-out ease-in;
+        --slide-out-to-y: 100%;
+      }
+
+      .turbo-custom-enter {
+        animation: 200ms slide-in ease-out;
+        --slide-in-from-y: 100%;
+      }
+
       @keyframes slide-in {
         from {
           opacity: 0;
-          transform: translate3d(var(--slide-in-from-x), 0, 0);
+          transform: translate3d(var(--slide-in-from-x, 0), var(--slide-in-from-y, 0), 0);
         }
       }
 
       @keyframes slide-out {
         to {
           opacity: 0;
-          transform: translate3d(var(--slide-out-to-x), 0, 0);
+          transform: translate3d(var(--slide-out-to-x, 0), var(--slide-out-to-y, 0), 0);
         }
       }
     </style>
