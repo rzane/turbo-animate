@@ -23,7 +23,7 @@ async function animate(className) {
 
 export function start() {
   let action = undefined;
-  let leave = undefined;
+  let animation = Promise.resolve();
 
   const onInitiate = (event) => {
     action = event.target.dataset.turboAnimateWith;
@@ -31,22 +31,26 @@ export function start() {
 
   const onVisit = (event) => {
     if (!action) action = event.detail.action;
-    leave = animate(`turbo-${action}-leave`);
+    animation = animate(`turbo-${action}-leave`);
 
-    addEventListener("turbo:before-render", onBeforeRender, { once: true });
+    addEventListener("turbo:render", onRender, { once: true });
     addEventListener("turbo:load", onLoad, { once: true });
   };
 
   const onBeforeRender = async (event) => {
     event.preventDefault();
-    await leave;
+    await animation;
     event.detail.resume();
   };
 
+  const onRender = () => {
+    animation = animate(`turbo-${action}-enter`);
+  };
+
   const onLoad = async () => {
-    await animate(`turbo-${action}-enter`);
+    await animation;
     action = undefined;
-    leave = undefined;
+    animation = Promise.resolve();
     getElements().forEach(resetElement);
     addEventListener("turbo:visit", onVisit, { once: true });
   };
@@ -54,4 +58,5 @@ export function start() {
   addEventListener("turbo:click", onInitiate);
   addEventListener("turbo:submit-start", onInitiate);
   addEventListener("turbo:visit", onVisit, { once: true });
+  addEventListener("turbo:before-render", onBeforeRender);
 }
