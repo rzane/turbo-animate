@@ -20,8 +20,9 @@ async function animate(className) {
   await Promise.all(promises);
 }
 
+// FIXME
+let action = undefined;
 export function start() {
-  let action = undefined;
   let animation = Promise.resolve();
 
   const onInitiate = (event) => {
@@ -58,4 +59,8 @@ export function start() {
   addEventListener("turbo:submit-start", onInitiate);
   addEventListener("turbo:visit", onNextVisit, { once: true });
   addEventListener("turbo:before-render", onBeforeRender);
+}
+
+export function setNextAction(_action) {
+  action = _action;
 }

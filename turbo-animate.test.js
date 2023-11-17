@@ -59,3 +59,27 @@ test("custom", async ({ page }) => {
   await expect(page.getByTestId("index")).toBeVisible();
   await expect(page.getByTestId("form")).not.toBeInViewport();
 });
+
+test("Turbo.visit runs animation", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByText("Imperative").click();
+  await expect(page.getByTestId("index")).toHaveClass("turbo-advance-leave");
+  await expect(page.getByTestId("about")).toHaveClass("turbo-advance-enter");
+
+  await expect(page.getByTestId("about")).not.toHaveClass("turbo-advance-enter");
+  await expect(page.getByTestId("about")).toBeVisible();
+  await expect(page.getByTestId("index")).not.toBeInViewport();
+});
+
+test("setting custom action for Turbo.visit", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByText("Set next action").click();
+  await expect(page.getByTestId("index")).toHaveClass("turbo-custom-leave");
+  await expect(page.getByTestId("about")).toHaveClass("turbo-custom-enter");
+
+  await expect(page.getByTestId("about")).not.toHaveClass("turbo-custom-enter");
+  await expect(page.getByTestId("about")).toBeVisible();
+  await expect(page.getByTestId("index")).not.toBeInViewport();
+});

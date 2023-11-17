@@ -7,10 +7,19 @@
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
 
     <script type="module">
-      import "https://cdn.skypack.dev/@hotwired/turbo@^7.3.0";
+      import * as Turbo from "https://cdn.skypack.dev/@hotwired/turbo@^7.3.0";
       import * as TurboAnimate from "/turbo-animate.js";
 
       TurboAnimate.start();
+
+      window.visitAbout = () => {
+        Turbo.visit("/about");
+      };
+
+      window.visitAboutCustom = () => {
+        TurboAnimate.setNextAction("custom");
+        Turbo.visit("/about");
+      };
     </script>
 
     <style>
