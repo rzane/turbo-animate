@@ -1,6 +1,8 @@
 # TurboAnimate
 
-Silky-smooth animations for Turbo Drive navigates between pages using CSS animations.
+Silky-smooth CSS animations for Turbo Drive navigation events.
+
+https://github.com/rzane/turbo-animate/assets/2731572/fc3c80e9-ad84-44c6-af70-cb2ae9c613e4
 
 ## Installation
 
@@ -27,8 +29,8 @@ Next, add `data-turbo-animate` to elements that you want to transition.
 </div>
 ```
 
-When Turbo navigates, a class name will be added to this element. You can define styles for this
-class name to animate the element.
+When Turbo navigates, a class name will be added to this element. You'll need to write some CSS
+to make animate this element, otherwise nothing will happen.
 
 ## Styles
 
@@ -39,8 +41,8 @@ Turbo has three visit types (also known as "actions"):
 * `restore` - Triggered by pressing the browser back button
 
 Each animation has two phases:
-* `leave` - The content is currently on the page.
-* `enter` - The new content returned by the the server.
+* `leave` - Remove existing content from the screen.
+* `enter` - Add new content to the screen.
 
 TurboAnimate will apply one of the following class names to each `data-turbo-animate` when a
 Turbo visit occurs:
