@@ -4,6 +4,12 @@
 <h2>Form</h2>
 
 <div data-turbo-animate data-testid="form">
+  <header>
+    <nav>
+      <a href="/" data-turbo-action="replace" data-turbo-animate-with="custom">&laquo; Back</a>
+    </nav>
+  </header>
+
   <form action="/form" method="POST" data-turbo-animate-with="custom">
     <p>
       <label for="form_name">Name</label>
