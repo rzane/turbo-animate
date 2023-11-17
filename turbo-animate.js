@@ -25,6 +25,12 @@ class Session {
     addEventListener("turbo:load", this.onNextLoad, { once: true });
   }
 
+  /**
+   * This function runs before every render and pauses Turbo's rendering until the
+   * current animation is complete. When Turbo has a warm cache, this function will
+   * be called twice within a single visit. In which case, the animation will represent
+   * the leave animation on the first render and the enter animation on the second render.
+   */
   onBeforeRender = async (event) => {
     event.preventDefault();
     await this.animation;
