@@ -42,24 +42,24 @@ Read the [CSS](#css) documentation to learn more.
 
 ```css
 .turbo-advance-leave {
-  animation: 200ms slide ease-in forwards;
+  animation: 200ms slide ease-out forwards;
   --translate-x: -100%;
 }
 
 .turbo-advance-enter {
-  animation: 200ms slide ease-out forwards reverse;
+  animation: 200ms slide ease-in forwards reverse;
   --translate-x: 100%;
 }
 
 .turbo-replace-leave,
 .turbo-restore-leave {
-  animation: 200ms slide ease-in forwards;
+  animation: 200ms slide ease-out forwards;
   --translate-x: 100%;
 }
 
 .turbo-replace-enter,
 .turbo-restore-enter {
-  animation: 200ms slide ease-out forwards reverse;
+  animation: 200ms slide ease-in forwards reverse;
   --translate-x: -100%;
 }
 
