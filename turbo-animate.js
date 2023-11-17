@@ -2,7 +2,7 @@ function getElements() {
   return Array.from(document.querySelectorAll("[data-turbo-animate]"));
 }
 
-function resetElement(element) {
+function removeClassName(element) {
   const classNames = Array.from(element.classList).filter(className => {
     return /^turbo-.+-enter|leave$/.test(className);
   });
@@ -12,7 +12,7 @@ function resetElement(element) {
 
 async function animate(className) {
   const promises = getElements().map(async element => {
-    resetElement(element);
+    removeClassName(element);
     element.classList.add(className);
     await Promise.all(element.getAnimations().map(animation => animation.finished));
   });
@@ -50,7 +50,7 @@ export function start() {
     await animation;
     action = undefined;
     animation = Promise.resolve();
-    getElements().forEach(resetElement);
+    getElements().forEach(removeClassName);
     addEventListener("turbo:visit", onNextVisit, { once: true });
   };
 
