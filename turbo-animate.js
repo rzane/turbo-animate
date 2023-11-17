@@ -19,7 +19,7 @@ class Session {
 
   onNextVisit = (event) => {
     this.action = this.action || event.detail.action;
-    this.startAnimation("leave");
+    this.animation = this.animate("leave");
 
     addEventListener("turbo:render", this.onNextRender, { once: true });
     addEventListener("turbo:load", this.onNextLoad, { once: true });
@@ -38,7 +38,7 @@ class Session {
   }
 
   onNextRender = () => {
-    this.startAnimation("enter");
+    this.animation = this.animate("enter");
   }
 
   onNextLoad = async () => {
@@ -55,14 +55,14 @@ class Session {
     return Array.from(document.querySelectorAll("[data-turbo-animate]"));
   }
 
-  startAnimation(phase) {
+  animate(phase) {
     const promises = this.elements.map(element => {
       this.removeAnimation(element);
       element.classList.add(`turbo-${this.action}-${phase}`);
       return Promise.all(element.getAnimations().map(animation => animation.finished));
     });
 
-    this.animation = Promise.all(promises);
+    return Promise.all(promises);
   }
 
   removeAnimation(element) {
