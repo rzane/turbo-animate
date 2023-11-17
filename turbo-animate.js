@@ -1,5 +1,5 @@
 class Session {
-  action = undefined;
+  action = null;
   animation = Promise.resolve();
 
   start() {
@@ -44,7 +44,7 @@ class Session {
   onNextLoad = async () => {
     await this.animation;
 
-    this.action = undefined;
+    this.action = null;
     this.animation = Promise.resolve();
     this.elements.forEach(element => this.removeAnimation(element));
 
