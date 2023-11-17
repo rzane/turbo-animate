@@ -19,7 +19,7 @@ class Session {
 
   onNextVisit = (event) => {
     this.action = this.action || event.detail.action;
-    this.startAnimation('leave');
+    this.startAnimation("leave");
 
     addEventListener("turbo:render", this.onNextRender, { once: true });
     addEventListener("turbo:load", this.onNextLoad, { once: true });
@@ -38,7 +38,7 @@ class Session {
   }
 
   onNextRender = () => {
-    this.startAnimation('enter');
+    this.startAnimation("enter");
   }
 
   onNextLoad = async () => {

@@ -1,5 +1,5 @@
 {
-  "name": "@rzane/turbo-animate",
+  "name": "turbo-animate",
   "version": "0.1.0",
   "author": "Ray Zane",
   "license": "MIT",
@@ -12,6 +12,10 @@
     "types": "./turbo-animate.d.ts",
     "default": "./turbo-animate.js"
   },
+  "files": [
+    "turbo-animate.js",
+    "turbo-animate.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rzane/turbo-animate.git"
