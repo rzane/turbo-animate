@@ -13,7 +13,6 @@ function resetElement(element) {
 async function animate(className) {
   const promises = getElements().map(async element => {
     resetElement(element);
-
     element.classList.add(className);
     await Promise.all(element.getAnimations().map(animation => animation.finished));
   });
@@ -29,12 +28,12 @@ export function start() {
     action = event.target.dataset.turboAnimateWith;
   };
 
-  const onVisit = (event) => {
+  const onNextVisit = (event) => {
     if (!action) action = event.detail.action;
     animation = animate(`turbo-${action}-leave`);
 
-    addEventListener("turbo:render", onRender, { once: true });
-    addEventListener("turbo:load", onLoad, { once: true });
+    addEventListener("turbo:render", onNextRender, { once: true });
+    addEventListener("turbo:load", onNextLoad, { once: true });
   };
 
   const onBeforeRender = async (event) => {
@@ -43,20 +42,20 @@ export function start() {
     event.detail.resume();
   };
 
-  const onRender = () => {
+  const onNextRender = () => {
     animation = animate(`turbo-${action}-enter`);
   };
 
-  const onLoad = async () => {
+  const onNextLoad = async () => {
     await animation;
     action = undefined;
     animation = Promise.resolve();
     getElements().forEach(resetElement);
-    addEventListener("turbo:visit", onVisit, { once: true });
+    addEventListener("turbo:visit", onNextVisit, { once: true });
   };
 
   addEventListener("turbo:click", onInitiate);
   addEventListener("turbo:submit-start", onInitiate);
-  addEventListener("turbo:visit", onVisit, { once: true });
+  addEventListener("turbo:visit", onNextVisit, { once: true });
   addEventListener("turbo:before-render", onBeforeRender);
 }
