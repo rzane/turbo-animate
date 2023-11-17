@@ -1,66 +1,74 @@
-function getElements() {
-  return Array.from(document.querySelectorAll("[data-turbo-animate]"));
-}
+class Session {
+  action = undefined;
+  animation = Promise.resolve();
 
-function removeClassName(element) {
-  const classNames = Array.from(element.classList).filter(className => {
-    return /^turbo-.+-enter|leave$/.test(className);
-  });
+  start() {
+    addEventListener("turbo:click", this.onInitiate);
+    addEventListener("turbo:submit-start", this.onInitiate);
+    addEventListener("turbo:visit", this.onNextVisit, { once: true });
+    addEventListener("turbo:before-render", this.onBeforeRender);
+  }
 
-  element.classList.remove(...classNames);
-}
+  setNextAction(action) {
+    this.action = action;
+  }
 
-async function animate(className) {
-  const promises = getElements().map(async element => {
-    removeClassName(element);
-    element.classList.add(className);
-    await Promise.all(element.getAnimations().map(animation => animation.finished));
-  });
+  onInitiate = (event) => {
+    this.action = this.action || event.target.dataset.turboAnimateWith;
+  }
 
-  await Promise.all(promises);
-}
+  onNextVisit = (event) => {
+    this.action = this.action || event.detail.action;
+    this.startAnimation('leave');
 
-// FIXME
-let action = undefined;
-export function start() {
-  let animation = Promise.resolve();
+    addEventListener("turbo:render", this.onNextRender, { once: true });
+    addEventListener("turbo:load", this.onNextLoad, { once: true });
+  }
 
-  const onInitiate = (event) => {
-    action = event.target.dataset.turboAnimateWith;
-  };
-
-  const onNextVisit = (event) => {
-    action = action || event.detail.action;
-    animation = animate(`turbo-${action}-leave`);
-
-    addEventListener("turbo:render", onNextRender, { once: true });
-    addEventListener("turbo:load", onNextLoad, { once: true });
-  };
-
-  const onBeforeRender = async (event) => {
+  onBeforeRender = async (event) => {
     event.preventDefault();
-    await animation;
+    await this.animation;
     event.detail.resume();
-  };
+  }
 
-  const onNextRender = () => {
-    animation = animate(`turbo-${action}-enter`);
-  };
+  onNextRender = () => {
+    this.startAnimation('enter');
+  }
 
-  const onNextLoad = async () => {
-    await animation;
-    action = undefined;
-    animation = Promise.resolve();
-    getElements().forEach(removeClassName);
-    addEventListener("turbo:visit", onNextVisit, { once: true });
-  };
+  onNextLoad = async () => {
+    await this.animation;
 
-  addEventListener("turbo:click", onInitiate);
-  addEventListener("turbo:submit-start", onInitiate);
-  addEventListener("turbo:visit", onNextVisit, { once: true });
-  addEventListener("turbo:before-render", onBeforeRender);
+    this.action = undefined;
+    this.animation = Promise.resolve();
+    this.elements.forEach(element => this.removeAnimation(element));
+
+    addEventListener("turbo:visit", this.onNextVisit, { once: true });
+  }
+
+  get elements() {
+    return Array.from(document.querySelectorAll("[data-turbo-animate]"));
+  }
+
+  startAnimation(phase) {
+    const promises = this.elements.map(element => {
+      this.removeAnimation(element);
+      element.classList.add(`turbo-${this.action}-${phase}`);
+      return Promise.all(element.getAnimations().map(animation => animation.finished));
+    });
+
+    this.animation = Promise.all(promises);
+  }
+
+  removeAnimation(element) {
+    const classNames = Array.from(element.classList).filter(className => {
+      return /^turbo-.+-enter|leave$/.test(className);
+    });
+
+    element.classList.remove(...classNames);
+  }
 }
 
-export function setNextAction(_action) {
-  action = _action;
-}
+const session = new Session();
+
+export const start = () => session.start();
+export const setNextAction = (action) => session.setNextAction(action);
