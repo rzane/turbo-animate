@@ -29,7 +29,7 @@ export function start() {
   };
 
   const onNextVisit = (event) => {
-    if (!action) action = event.detail.action;
+    action = action || event.detail.action;
     animation = animate(`turbo-${action}-leave`);
 
     addEventListener("turbo:render", onNextRender, { once: true });
