@@ -1,16 +1,21 @@
-const isAnimateClassName = className => /^turbo-.+-enter|leave$/.test(className);
+function getElements() {
+  return Array.from(document.querySelectorAll("[data-turbo-animate]"));
+}
+
+function resetElement(element) {
+  const classNames = Array.from(element.classList).filter(className => {
+    return /^turbo-.+-enter|leave$/.test(className);
+  });
+
+  element.classList.remove(...classNames);
+}
 
 async function animate(className) {
-  const elements = Array.from(document.querySelectorAll("[data-turbo-animate]"));
-
-  const promises = elements.map(async element => {
-    const classNames = Array.from(element.classList).filter(isAnimateClassName);
-    element.classList.remove(...classNames);
+  const promises = getElements().map(async element => {
+    resetElement(element);
 
     element.classList.add(className);
     await Promise.all(element.getAnimations().map(animation => animation.finished));
-
-    element.classList.remove(className);
   });
 
   await Promise.all(promises);
@@ -39,6 +44,7 @@ export function start() {
     await animate(`turbo-${action}-enter`);
     action = undefined;
     leave = undefined;
+    getElements().forEach(resetElement);
     addEventListener("turbo:visit", onVisit, { once: true });
     addEventListener("turbo:before-render", onBeforeRender, { once: true });
   };
