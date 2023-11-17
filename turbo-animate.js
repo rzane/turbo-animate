@@ -32,6 +32,9 @@ export function start() {
   const onVisit = (event) => {
     if (!action) action = event.detail.action;
     leave = animate(`turbo-${action}-leave`);
+
+    addEventListener("turbo:before-render", onBeforeRender, { once: true });
+    addEventListener("turbo:load", onLoad, { once: true });
   };
 
   const onBeforeRender = async (event) => {
@@ -46,12 +49,9 @@ export function start() {
     leave = undefined;
     getElements().forEach(resetElement);
     addEventListener("turbo:visit", onVisit, { once: true });
-    addEventListener("turbo:before-render", onBeforeRender, { once: true });
   };
 
   addEventListener("turbo:click", onInitiate);
   addEventListener("turbo:submit-start", onInitiate);
   addEventListener("turbo:visit", onVisit, { once: true });
-  addEventListener("turbo:before-render", onBeforeRender, { once: true });
-  addEventListener("turbo:load", onLoad);
 }
