@@ -28,48 +28,41 @@
       }
 
       .turbo-advance-leave {
-        animation: 200ms slide-out ease-in forwards;
-        --slide-out-to-x: -100%;
+        animation: 200ms slide ease-in forwards;
+        --translate-x: -100%;
       }
 
       .turbo-advance-enter {
-        animation: 200ms slide-in ease-out forwards;
-        --slide-in-from-x: 100%;
+        animation: 200ms slide ease-out forwards reverse;
+        --translate-x: 100%;
       }
 
       .turbo-replace-leave,
       .turbo-restore-leave {
-        animation: 200ms slide-out ease-in forwards;
-        --slide-out-to-x: 100%;
+        animation: 200ms slide ease-in forwards;
+        --translate-x: 100%;
       }
 
       .turbo-replace-enter,
       .turbo-restore-enter {
-        animation: 200ms slide-in ease-out forwards;
-        --slide-in-from-x: -100%;
+        animation: 200ms slide ease-out forwards reverse;
+        --translate-x: -100%;
       }
 
       .turbo-custom-leave {
-        animation: 200ms slide-out ease-in forwards;
-        --slide-out-to-y: 100%;
+        animation: 200ms slide ease-in forwards;
+        --translate-y: 100%;
       }
 
       .turbo-custom-enter {
-        animation: 200ms slide-in ease-out forwards;
-        --slide-in-from-y: 100%;
+        animation: 200ms slide ease-out forwards reverse;
+        --translate-y: 100%;
       }
 
-      @keyframes slide-in {
-        from {
-          opacity: 0;
-          transform: translate3d(var(--slide-in-from-x, 0), var(--slide-in-from-y, 0), 0);
-        }
-      }
-
-      @keyframes slide-out {
+      @keyframes slide {
         to {
           opacity: 0;
-          transform: translate3d(var(--slide-out-to-x, 0), var(--slide-out-to-y, 0), 0);
+          transform: translate3d(var(--translate-x, 0), var(--translate-y, 0), 0);
         }
       }
     </style>
