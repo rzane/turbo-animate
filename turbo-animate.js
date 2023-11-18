@@ -1,5 +1,10 @@
+const PENDING = "pending";
+const LEAVE = "leave";
+const ENTER = "enter";
+
 class Session {
   action = null;
+  state = PENDING;
   animation = Promise.resolve();
 
   start() {
@@ -19,6 +24,7 @@ class Session {
 
   onNextVisit = (event) => {
     this.action = this.action || event.detail.action;
+    this.state = LEAVE;
     this.animation = this.animate("leave");
 
     addEventListener("turbo:render", this.onNextRender, { once: true });
@@ -38,6 +44,7 @@ class Session {
   }
 
   onNextRender = () => {
+    this.state = ENTER;
     this.animation = this.animate("enter");
   }
 
@@ -45,6 +52,7 @@ class Session {
     await this.animation;
 
     this.action = null;
+    this.state = PENDING;
     this.animation = Promise.resolve();
     this.elements.forEach(element => this.removeAnimation(element));
 
