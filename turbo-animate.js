@@ -10,8 +10,10 @@ class Session {
   start() {
     addEventListener("turbo:click", this.onInitiate);
     addEventListener("turbo:submit-start", this.onInitiate);
-    addEventListener("turbo:visit", this.onNextVisit, { once: true });
+    addEventListener("turbo:visit", this.onVisit);
     addEventListener("turbo:before-render", this.onBeforeRender);
+    addEventListener("turbo:render", this.onRender);
+    addEventListener("turbo:load", this.onLoad);
   }
 
   setNextAction(action) {
@@ -22,13 +24,12 @@ class Session {
     this.action = this.action || event.target.dataset.turboAnimateWith;
   }
 
-  onNextVisit = (event) => {
-    this.action = this.action || event.detail.action;
-    this.state = LEAVE;
-    this.animation = this.animate("leave");
-
-    addEventListener("turbo:render", this.onNextRender, { once: true });
-    addEventListener("turbo:load", this.onNextLoad, { once: true });
+  onVisit = (event) => {
+    if (this.state === PENDING) {
+      this.action = this.action || event.detail.action;
+      this.state = LEAVE;
+      this.animation = this.animate("leave");
+    }
   }
 
   /**
@@ -43,20 +44,22 @@ class Session {
     event.detail.resume();
   }
 
-  onNextRender = () => {
-    this.state = ENTER;
-    this.animation = this.animate("enter");
+  onRender = () => {
+    if (this.state === LEAVE) {
+      this.state = ENTER;
+      this.animation = this.animate("enter");
+    }
   }
 
-  onNextLoad = async () => {
-    await this.animation;
+  onLoad = async () => {
+    if (this.state === ENTER) {
+      await this.animation;
 
-    this.action = null;
-    this.state = PENDING;
-    this.animation = Promise.resolve();
-    this.elements.forEach(element => this.removeAnimation(element));
-
-    addEventListener("turbo:visit", this.onNextVisit, { once: true });
+      this.action = null;
+      this.state = PENDING;
+      this.animation = Promise.resolve();
+      this.elements.forEach(element => this.removeAnimation(element));
+    }
   }
 
   get elements() {
