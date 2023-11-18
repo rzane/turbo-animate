@@ -18,9 +18,9 @@ function animate(className) {
 }
 
 class Session {
-  action = null;
-  state = PENDING;
-  animation = Promise.resolve();
+  constructor() {
+    this.reset();
+  }
 
   start() {
     addEventListener("turbo:click", this.onInitiate);
@@ -29,6 +29,12 @@ class Session {
     addEventListener("turbo:before-render", this.onBeforeRender);
     addEventListener("turbo:render", this.onRender);
     addEventListener("turbo:load", this.onLoad);
+  }
+
+  reset() {
+    this.action = null;
+    this.state = PENDING;
+    this.animation = Promise.resolve();
   }
 
   setNextAction(action) {
@@ -69,10 +75,7 @@ class Session {
   onLoad = async () => {
     if (this.state === ENTER) {
       await this.animation;
-
-      this.action = null;
-      this.state = PENDING;
-      this.animation = Promise.resolve();
+      this.reset();
     }
   }
 }
