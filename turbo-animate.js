@@ -58,7 +58,6 @@ class Session {
       this.action = null;
       this.state = PENDING;
       this.animation = Promise.resolve();
-      this.elements.forEach(element => this.removeAnimation(element));
     }
   }
 
