@@ -3,25 +3,27 @@ import { test, expect } from "@playwright/test";
 test("advance", async ({ page }) => {
   await page.goto("/");
 
-  await page.getByText("About").click();
-  await expect(page.getByTestId("index")).toHaveClass("turbo-advance-leave");
-  await expect(page.getByTestId("about")).toHaveClass("turbo-advance-enter");
+  const leave = expect(page.getByTestId("index")).toHaveClass("turbo-advance-leave");
+  const enter = expect(page.getByTestId("about")).toHaveClass("turbo-advance-enter");
 
-  await expect(page.getByTestId("about")).not.toHaveClass("turbo-advance-enter");
+  await page.getByText("About").click();
+  await leave;
+  await enter;
+
   await expect(page.getByTestId("about")).toBeVisible();
   await expect(page.getByTestId("index")).not.toBeInViewport();
 });
 
 test("replace", async ({ page }) => {
-  await page.goto("/");
-  await page.getByText("About").click();
-  await expect(page.getByTestId("about")).not.toHaveClass("turbo-advance-enter");
+  await page.goto("/about");
+
+  const leave = expect(page.getByTestId("about")).toHaveClass("turbo-replace-leave");
+  const enter = expect(page.getByTestId("index")).toHaveClass("turbo-replace-enter");
 
   await page.getByText("Back").click();
-  await expect(page.getByTestId("about")).toHaveClass("turbo-replace-leave");
-  await expect(page.getByTestId("index")).toHaveClass("turbo-replace-enter");
+  await leave;
+  await enter;
 
-  await expect(page.getByTestId("index")).not.toHaveClass("turbo-replace-enter");
   await expect(page.getByTestId("index")).toBeVisible();
   await expect(page.getByTestId("about")).not.toBeInViewport();
 });
@@ -29,57 +31,71 @@ test("replace", async ({ page }) => {
 test("restore", async ({ page }) => {
   await page.goto("/");
   await page.getByText("About").click();
-  await expect(page.getByTestId("about")).not.toHaveClass("turbo-advance-enter");
+  await expect(page.getByTestId("index")).not.toBeInViewport();
+
+  const leave = expect(page.getByTestId("about")).toHaveClass("turbo-restore-leave");
+  const enter = expect(page.getByTestId("index")).toHaveClass("turbo-restore-enter");
 
   await page.goBack();
-  await expect(page.getByTestId("about")).toHaveClass("turbo-restore-leave");
-  await expect(page.getByTestId("index")).toHaveClass("turbo-restore-enter");
+  await leave;
+  await enter;
 
-  await expect(page.getByTestId("index")).not.toHaveClass("turbo-restore-enter");
   await expect(page.getByTestId("index")).toBeVisible();
   await expect(page.getByTestId("about")).not.toBeInViewport();
 });
 
-test("custom", async ({ page }) => {
+test("custom navigation", async ({ page }) => {
   await page.goto("/");
 
-  await page.getByText("Form").click();
-  await expect(page.getByTestId("index")).toHaveClass("turbo-custom-leave");
-  await expect(page.getByTestId("form")).toHaveClass("turbo-custom-enter");
+  const leave = expect(page.getByTestId("index")).toHaveClass("turbo-custom-leave");
+  const enter = expect(page.getByTestId("form")).toHaveClass("turbo-custom-enter");
 
-  await expect(page.getByTestId("form")).not.toHaveClass("turbo-custom-enter");
+  await page.getByText("Form").click();
+  await leave;
+  await enter;
+
   await expect(page.getByTestId("form")).toBeVisible();
   await expect(page.getByTestId("index")).not.toBeInViewport();
+});
+
+test("custom form submission", async ({ page }) => {
+  await page.goto("/form");
+
+  const leave = expect(page.getByTestId("form")).toHaveClass("turbo-custom-leave");
+  const enter = expect(page.getByTestId("index")).toHaveClass("turbo-custom-enter");
 
   await page.getByText("Save").click();
-  await expect(page.getByTestId("form")).toHaveClass("turbo-custom-leave");
-  await expect(page.getByTestId("index")).toHaveClass("turbo-custom-enter");
+  await leave;
+  await enter;
 
-  await expect(page.getByTestId("index")).not.toHaveClass("turbo-custom-enter");
   await expect(page.getByTestId("index")).toBeVisible();
   await expect(page.getByTestId("form")).not.toBeInViewport();
 });
 
-test("Turbo.visit runs animation", async ({ page }) => {
+test("animating Turbo.visit", async ({ page }) => {
   await page.goto("/");
 
-  await page.getByText("Imperative").click();
-  await expect(page.getByTestId("index")).toHaveClass("turbo-advance-leave");
-  await expect(page.getByTestId("about")).toHaveClass("turbo-advance-enter");
+  const leave = expect(page.getByTestId("index")).toHaveClass("turbo-advance-leave");
+  const enter = expect(page.getByTestId("about")).toHaveClass("turbo-advance-enter");
 
-  await expect(page.getByTestId("about")).not.toHaveClass("turbo-advance-enter");
+  await page.getByText("Imperative").click();
+  await leave;
+  await enter;
+
   await expect(page.getByTestId("about")).toBeVisible();
   await expect(page.getByTestId("index")).not.toBeInViewport();
 });
 
-test("setting custom action for Turbo.visit", async ({ page }) => {
+test("custom action with Turbo.visit", async ({ page }) => {
   await page.goto("/");
 
-  await page.getByText("Set next action").click();
-  await expect(page.getByTestId("index")).toHaveClass("turbo-custom-leave");
-  await expect(page.getByTestId("about")).toHaveClass("turbo-custom-enter");
+  const leave = expect(page.getByTestId("index")).toHaveClass("turbo-custom-leave");
+  const enter = expect(page.getByTestId("about")).toHaveClass("turbo-custom-enter");
 
-  await expect(page.getByTestId("about")).not.toHaveClass("turbo-custom-enter");
+  await page.getByText("Set next action").click();
+  await leave;
+  await enter;
+
   await expect(page.getByTestId("about")).toBeVisible();
   await expect(page.getByTestId("index")).not.toBeInViewport();
 });
