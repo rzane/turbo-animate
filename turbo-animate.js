@@ -1,6 +1,21 @@
 const PENDING = "pending";
 const LEAVE = "leave";
 const ENTER = "enter";
+const SELECTOR = "[data-turbo-animate]";
+
+function isAnimation(className) {
+  return /^turbo-.+-enter|leave$/.test(className);
+}
+
+function animate(className) {
+  const promises = Array.from(document.querySelectorAll(SELECTOR)).map(element => {
+    element.classList.remove(...Array.from(element.classList).filter(isAnimation));
+    element.classList.add(className);
+    return Promise.all(element.getAnimations().map(animation => animation.finished));
+  });
+
+  return Promise.all(promises);
+}
 
 class Session {
   action = null;
@@ -28,7 +43,7 @@ class Session {
     if (this.state === PENDING) {
       this.action = this.action || event.detail.action;
       this.state = LEAVE;
-      this.animation = this.animate("leave");
+      this.animation = animate(`turbo-${this.action}-leave`);
     }
   }
 
@@ -47,7 +62,7 @@ class Session {
   onRender = () => {
     if (this.state === LEAVE) {
       this.state = ENTER;
-      this.animation = this.animate("enter");
+      this.animation = animate(`turbo-${this.action}-enter`);
     }
   }
 
@@ -59,28 +74,6 @@ class Session {
       this.state = PENDING;
       this.animation = Promise.resolve();
     }
-  }
-
-  get elements() {
-    return Array.from(document.querySelectorAll("[data-turbo-animate]"));
-  }
-
-  animate(phase) {
-    const promises = this.elements.map(element => {
-      this.removeAnimation(element);
-      element.classList.add(`turbo-${this.action}-${phase}`);
-      return Promise.all(element.getAnimations().map(animation => animation.finished));
-    });
-
-    return Promise.all(promises);
-  }
-
-  removeAnimation(element) {
-    const classNames = Array.from(element.classList).filter(className => {
-      return /^turbo-.+-enter|leave$/.test(className);
-    });
-
-    element.classList.remove(...classNames);
   }
 }
 
