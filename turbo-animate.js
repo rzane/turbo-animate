@@ -17,6 +17,10 @@ function animate(className) {
   return Promise.all(promises);
 }
 
+function removeAnimation(className) {
+  document.querySelectorAll(SELECTOR).forEach(element => element.classList.remove(className));
+}
+
 class Session {
   constructor() {
     this.reset();
@@ -75,6 +79,7 @@ class Session {
   onLoad = async () => {
     if (this.state === ENTER) {
       await this.animation;
+      removeAnimation(`turbo-${this.action}-enter`);
       this.reset();
     }
   }
