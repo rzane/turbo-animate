@@ -8,17 +8,15 @@ function isAnimation(className) {
 }
 
 function animate(className) {
-  const promises = Array.from(document.querySelectorAll(SELECTOR)).map(element => {
+  const animations = Array.from(document.querySelectorAll(SELECTOR)).flatMap(element => {
     element.classList.remove(...Array.from(element.classList).filter(isAnimation));
+    void element.offsetWidth; // https://css-tricks.com/restart-css-animation/
+
     element.classList.add(className);
-    return Promise.all(element.getAnimations().map(animation => animation.finished));
+    return element.getAnimations();
   });
 
-  return Promise.all(promises);
-}
-
-function removeAnimation(className) {
-  document.querySelectorAll(SELECTOR).forEach(element => element.classList.remove(className));
+  return Promise.all(animations.map(animation => animation.finished));
 }
 
 class Session {
@@ -79,7 +77,6 @@ class Session {
   onLoad = async () => {
     if (this.state === ENTER) {
       await this.animation;
-      removeAnimation(`turbo-${this.action}-enter`);
       this.reset();
     }
   }
