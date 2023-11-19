@@ -46,7 +46,7 @@ class Session {
   }
 
   onInitiate = (event) => {
-    this.action = this.action || event.target.dataset.turboAnimateWith;
+    this.action = this.action || event.target.dataset.turboAnimateWith || null;
   }
 
   onVisit = (event) => {
