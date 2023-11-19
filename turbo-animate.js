@@ -28,6 +28,7 @@ class Session {
     addEventListener("turbo:click", this.onInitiate);
     addEventListener("turbo:submit-start", this.onInitiate);
     addEventListener("turbo:visit", this.onVisit);
+    addEventListener("popstate", this.onPopstate);
     addEventListener("turbo:before-render", this.onBeforeRender);
     addEventListener("turbo:render", this.onRender);
     addEventListener("turbo:load", this.onLoad);
@@ -36,6 +37,7 @@ class Session {
   reset() {
     this.action = null;
     this.state = PENDING;
+    this.url = window.location.href;
     this.animation = Promise.resolve();
   }
 
@@ -47,11 +49,27 @@ class Session {
     this.action = this.action || event.target.dataset.turboAnimateWith || null;
   }
 
+  /**
+   * Visit can be called multiple times. For example, it'll be called for each redirect.
+   */
   onVisit = (event) => {
+    this.url = event.detail.url;
+
     if (this.state === PENDING) {
       this.action = this.action || event.detail.action;
       this.state = LEAVE;
       this.animation = animate(`turbo-${this.action}-leave`);
+    }
+  }
+
+  /**
+   * Detect a back button press before the next page loads. In this scenario,
+   * Turbo doesn't fire any events.
+   */
+  onPopstate = () => {
+    if (this.state !== PENDING && window.location.href !== this.url) {
+      animate("turbo-restore-enter");
+      this.reset();
     }
   }
 
